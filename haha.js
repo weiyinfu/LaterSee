@@ -75,22 +75,24 @@ const cmdList = [
 ]
 
 function main() {
-    const handlerMap = {}
-    for (let cmd of cmdList) {
-        handlerMap[cmd.name] = cmd;
-    }
-
-    for (const cmd of cmdList) {
-        const info = {
-            id: cmd.name,
-            title: cmd.name,
+    chrome.contextMenus.removeAll(function () {
+        const handlerMap = {}
+        for (let cmd of cmdList) {
+            handlerMap[cmd.name] = cmd;
         }
-        chrome.contextMenus.create(info, onMenuCreated);
-    }
 
-    chrome.contextMenus.onClicked.addListener(function (info, tab) {
-        handlerMap [info.menuItemId].handle();
-    });
+        for (const cmd of cmdList) {
+            const info = {
+                id: cmd.name,
+                title: cmd.name,
+            }
+            chrome.contextMenus.create(info, onMenuCreated);
+        }
+
+        chrome.contextMenus.onClicked.addListener(function (info, tab) {
+            handlerMap [info.menuItemId].handle();
+        });
+    })
 }
 
 document.onreadystatechange = function () {
