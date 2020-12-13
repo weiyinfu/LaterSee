@@ -2,17 +2,10 @@ function onMenuCreated() {
     console.log(arguments)
 }
 
-chrome.contextMenus.create({
-    id: "OneTab",
-    type: "normal",
-    title: "OneTab",
-});
-
 function saveAndClose(tabList) {
+    //发送标签页到服务器并关闭标签页
     console.log(tabList)
-    axios.post(getUrl(), {
-        "tablist": tabList
-    }).then(resp => {
+    axios.post(getUrl(), tabList).then(resp => {
         if (resp.data !== "ok" && resp !== "ok") {
             throw new Error("发送数据错误");
         }
@@ -27,6 +20,7 @@ function saveAndClose(tabList) {
 const cmdList = [
     {
         name: "发送全部标签页至OneTab",
+        noParent: true,
         handle() {
             chrome.tabs.getAllInWindow(tabs => {
                 saveAndClose(tabs);
@@ -66,6 +60,7 @@ const cmdList = [
         }
     }, {
         name: "仅发送此标签页至Onetab",
+        noParent: true,
         handle() {
             chrome.tabs.getAllInWindow(tabs => {
                 for (let tab of tabs) {
@@ -78,15 +73,28 @@ const cmdList = [
         }
     }
 ]
-const handlerMap = {}
-for (const cmd of cmdList) {
-    chrome.contextMenus.create({
-        id: cmd.name,
-        title: cmd.name,
-        parentId: "OneTab"
-    }, onMenuCreated);
-    handlerMap[cmd.name] = cmd;
+
+function main() {
+    const handlerMap = {}
+    for (let cmd of cmdList) {
+        handlerMap[cmd.name] = cmd;
+    }
+
+    for (const cmd of cmdList) {
+        const info = {
+            id: cmd.name,
+            title: cmd.name,
+        }
+        chrome.contextMenus.create(info, onMenuCreated);
+    }
+
+    chrome.contextMenus.onClicked.addListener(function (info, tab) {
+        handlerMap [info.menuItemId].handle();
+    });
 }
-chrome.contextMenus.onClicked.addListener(function (info, tab) {
-    handlerMap [info.menuItemId].handle();
-});
+
+document.onreadystatechange = function () {
+    if (document.readyState === "complete") {
+        main()
+    }
+}
