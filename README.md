@@ -1,3 +1,8 @@
+# LaterSee是什么？
+LaterSee是一个Chrome标签页管理工具，功能类似OneTab。和OneTab的不同之处在于，Onetab把标签信息保存在了本地LocalStorage里面，LaterSee把标签页信息以Ajax请求的方式发送到用户指定的一个post接口上。  
+为啥不用现成的OneTab？Onetab在标签页比较少的时候有用，但是标签页一旦多了就需要以树形结构看标签。  
+标签页的本质是一个todo项，为了将标签页跟todo管理工具整合起来，就需要LaterSee。  
+LaterSee含义是"一会儿再看"，先把标签页保存起来吧。
 
 # 文件说明
 * error.html和error.js：错误提示

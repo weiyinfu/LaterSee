@@ -19,7 +19,7 @@ function saveAndClose(tabList) {
 
 const cmdList = [
     {
-        name: "发送全部标签页至OneTab",
+        name: "保存全部标签页",
         noParent: true,
         handle() {
             chrome.tabs.getAllInWindow(tabs => {
@@ -27,7 +27,7 @@ const cmdList = [
             })
         }
     }, {
-        name: "发送右侧标签页至onetab",
+        name: "保存右侧标签页",
         handle() {
             chrome.tabs.getAllInWindow(tabs => {
                 let start = false;
@@ -45,7 +45,7 @@ const cmdList = [
             })
         }
     }, {
-        name: "发送左侧标签页至Onetab",
+        name: "保存左侧标签页",
         handle() {
             chrome.tabs.getAllInWindow(tabs => {
                 let goodTabs = []
@@ -59,7 +59,7 @@ const cmdList = [
             })
         }
     }, {
-        name: "仅发送此标签页至Onetab",
+        name: "保存此标签页",
         noParent: true,
         handle() {
             chrome.tabs.getAllInWindow(tabs => {

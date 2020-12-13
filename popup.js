@@ -9,7 +9,7 @@ function main() {
 
     ele.addEventListener("change", handleChange);
     try {
-        ele.value = getUrl()
+        ele.value = getUrl() || ""
     } catch (e) {
         console.error(e);
     }

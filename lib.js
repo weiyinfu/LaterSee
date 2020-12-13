@@ -7,7 +7,7 @@ function storageGet(k) {
     return localStorage[k]
 }
 
-const urlKey = "onetabUrl";
+const urlKey = "url";
 const errorKey = "error";
 
 function getUrl() {
