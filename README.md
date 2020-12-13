@@ -37,7 +37,7 @@ chrome.contextMenus.create({
 * id
 * title
 * url
-* 
+
 ```plain
 const tab={
     active: false
