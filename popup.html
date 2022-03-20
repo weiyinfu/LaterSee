@@ -5,16 +5,35 @@
     <script src="./lib.js"></script>
     <script src="./popup.js"></script>
     <style>
-        #url {
-            font-size: 20px;
+        #main {
             width: 400px;
+            font-size: 20px;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+        }
+
+        .desc {
+            min-width: 150px;
+        }
+
+        input {
+            flex: 1;
+            font-size: 20px;
         }
     </style>
 </head>
 
 <body>
-<div>
-    <input id="url" type="text" placeholder="请粘贴保存标签页的目标URL">
+<div id="main">
+    <div class="row">
+        <span class="desc">目标URL</span><input id="url" type="text" placeholder="请粘贴保存标签页的目标URL">
+    </div>
+    <div class="row">
+        <span class="desc">是否发送标签页事件</span><input id="sendTabEvent" type="checkbox" checked>
+    </div>
 </div>
 </body>
 </html>

@@ -65,3 +65,29 @@ const tab={
     windowId: 2065
 }
 ```
+
+# 用户拖动标签的时候不能调用chrome.tabs.get
+
+例如：代码
+```js
+chrome.tabs.onSelectionChanged.addListener((tabId, info) => {
+    chrome.tabs.get(tabId, tab => {
+        emitEvent({type: "select", tabId, info, tab})
+    })
+})
+```
+报错信息
+```plain
+Unchecked runtime.lastError: Tabs cannot be edited right now (user may be dragging a tab).
+```
+
+改正方法：使用定时器定时调用`chrome.tabs.get()`
+```js
+    chrome.tabs.onSelectionChanged.addListener((tabId, info) => {
+        setTimeout(() => {
+            chrome.tabs.get(tabId, tab => {
+                emitEvent({type: "select", tabId, info, tab})
+            })
+        }, 150)
+    })
+```

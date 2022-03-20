@@ -9,14 +9,7 @@ function storageGet(k) {
 
 const urlKey = "url";
 const errorKey = "error";
-
-function getUrl() {
-    return storageGet(urlKey);
-}
-
-function saveUrl(value) {
-    storageSet(urlKey, value);
-}
+const shouldSendTabEventKey = "tabEvent";
 
 function setError(err) {
     storageSet(errorKey, err);
@@ -24,4 +17,16 @@ function setError(err) {
 
 function getError() {
     return storageGet(errorKey);
+}
+
+function getUrl() {
+    return storageGet(urlKey)
+}
+
+function getSendTabEvent() {
+    const ans = storageGet(shouldSendTabEventKey)
+    if (ans === "true" || ans === "undefined" || ans === undefined) {
+        return true;
+    }
+    return false;
 }

@@ -13,20 +13,46 @@ function saveAndClose(tabList) {
     }).catch(onError)
 }
 
+let lastOpenErrorTime = 0;
+
 function onError(err) {
     setError(err)
-    window.open("error.html")
+    const now = new Date().getTime();
+    if (lastOpenErrorTime - now > 1000 * 30) {
+        lastOpenErrorTime = now;
+        window.open("error.html")
+    }
     console.log(err)
 }
 
-function emitEvent(kwargs) {
-    console.log(kwargs)
-    axios.post(getUrl(), kwargs).then(resp => {
-        if (resp.data !== "ok" && resp !== "ok") {
-            throw new Error("发送数据错误");
-        }
-        console.log("ok")
-    }).catch(onError)
+function emitEvent(event) {
+    if (!getSendTabEvent()) {
+        //如果拒绝发送，则直接返回
+        return
+    }
+
+    function go() {
+        console.log(event)
+        axios.post(getUrl(), event).then(resp => {
+            if (resp.data !== "ok" && resp !== "ok") {
+                throw new Error("发送数据错误");
+            }
+            console.log("ok")
+        }).catch(onError)
+    }
+
+    if (event.tab || event.type === "remove") {
+        //如果有tab信息，直接提交，否则过一会儿再提交
+        go()
+    } else {
+        setTimeout(() => {
+            chrome.tabs.get(event.tabId, tab => {
+                event.tab = tab
+                go()
+            })
+        }, 150)
+    }
+
 }
 
 const cmdList = [
@@ -107,27 +133,34 @@ function main() {
             handlerMap [info.menuItemId].handle();
         });
     })
-    chrome.tabs.onCreated.addListener(tab => {
-        emitEvent({type: "create", tab})
-    })
-    chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
-        emitEvent({type: "update", tabId, info, tab})
-    })
-    chrome.tabs.onRemoved.addListener((tabId, info) => {
-        emitEvent({type: "remove", tabId, info})
-    })
-    chrome.tabs.onAttached.addListener(function (tabId, info) {
-        emitEvent({type: "attach", tabId, info})
-    });
-    chrome.tabs.onDetached.addListener((tabId, info) => {
-        emitEvent({type: "detach", tabId, info})
-    })
-    chrome.tabs.onMoved.addListener((tabId, info) => {
-        emitEvent({type: "move", tabId, info})
-    })
-    chrome.tabs.onSelectionChanged.addListener((tabId, info) => {
-        emitEvent({type: "select", tabId, info})
-    })
+    if (getSendTabEvent()) {
+        //如果应该发送标签页变化事件
+        chrome.tabs.onCreated.addListener(tab => {
+            emitEvent({type: "create", tab})
+        })
+        chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
+            emitEvent({type: "update", tabId, info, tab})
+        })
+        chrome.tabs.onRemoved.addListener((tabId, info) => {
+            emitEvent({type: "remove", tabId, info})
+        })
+        chrome.tabs.onAttached.addListener(function (tabId, info) {
+            chrome.tabs.get(tabId, tab => {
+                emitEvent({type: "attach", tabId, info})
+            })
+        });
+        chrome.tabs.onDetached.addListener((tabId, info) => {
+            chrome.tabs.get(tabId, tab => {
+                emitEvent({type: "detach", tabId, info})
+            })
+        })
+        chrome.tabs.onMoved.addListener((tabId, info) => {
+            emitEvent({type: "move", tabId, info})
+        })
+        chrome.tabs.onSelectionChanged.addListener((tabId, info) => {
+            emitEvent({type: "select", tabId, info})
+        })
+    }
 }
 
 document.onreadystatechange = function () {
