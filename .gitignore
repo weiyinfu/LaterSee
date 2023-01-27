@@ -1,2 +1,15 @@
 .idea/
 *.iml
+
+.vscode/
+web-ext-artifacts
+.pytest_cache
+package-lock.json
+__pycache__/
+node_modules/
+.pynb_checkpoints
+yarn-error.log
+*.lock
+cmake-build-debug
+yarn.lock
+.DS_Store
