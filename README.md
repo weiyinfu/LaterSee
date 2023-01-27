@@ -91,3 +91,6 @@ Unchecked runtime.lastError: Tabs cannot be edited right now (user may be draggi
         }, 150)
     })
 ```
+
+# 使用方式
+在服务端起一个服务器，然后把URL贴上去。例如：`http://localhost:8080/api/add_later_see`

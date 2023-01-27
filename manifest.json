@@ -12,17 +12,7 @@
   },
   "background": {
     "persistent": true,
-    "scripts": [
-      "lib.js",
-      "axios.min.js",
-      "haha.js"
-    ]
+    "scripts": ["lib.js", "axios.min.js", "haha.js"]
   },
-  "permissions": [
-    "tabs",
-    "contextMenus",
-    "activeTab",
-    "http://*/",
-    "http://*/"
-  ]
+  "permissions": ["tabs", "contextMenus", "activeTab", "http://*/"]
 }
