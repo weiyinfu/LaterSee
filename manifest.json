@@ -1,7 +1,7 @@
 {
   "name": "LaterSee",
   "description": "一会儿再看，把全部标签页保存下来",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "manifest_version": 2,
   "icons": {
     "128": "latersee.png",

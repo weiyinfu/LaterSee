@@ -66,7 +66,7 @@ function emitEvent(event) {
 }
 
 function handleTabs(tabsHandler) {
-    browser.tabs.query({}).then(tabsHandler);
+    browser.tabs.query({currentWindow: true}).then(tabsHandler);
 }
 
 
